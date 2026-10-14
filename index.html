@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#35191e">
+<title>Project Genesis — Idea to Execution</title>
+
+<style>
+:root{
+  --bg:#f5efea;
+  --surface:#fffaf6;
+  --surface-2:#f0e5dd;
+  --ink:#291c1d;
+  --muted:#816e6c;
+  --line:#e3d2c9;
+  --red:#b51f35;
+  --red-dark:#84182a;
+  --red-light:#f7dfe1;
+  --burgundy:#35191e;
+  --green:#47704b;
+  --amber:#a66b20;
+  --radius:18px;
+  --shadow:0 12px 35px rgba(61,27,31,.07);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  font-size:14px;
+  line-height:1.6;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:3px solid #d86a78;
+  outline-offset:3px;
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+::selection{background:#f3bdc4;color:#291c1d}
+
+.layout{
+  display:grid;
+  grid-template-columns:250px minmax(0,1fr);
+  min-height:100vh;
+}
+
+.sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  padding:25px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  background:var(--burgundy);
+  color:#fff6f1;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:2px 8px 23px;
+  border-bottom:1px solid #59353a;
+}
+.brand-mark{
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#ed6472,#a51b30);
+  color:#fff;
+  font-family:Georgia,serif;
+  font-size:24px;
+  font-weight:bold;
+  box-shadow:0 7px 20px #b51f3540;
+}
+.brand-name{font-size:15px;font-weight:850;letter-spacing:.11em}
+.brand-sub{
+  color:#c9aaa8;
+  font-size:9px;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+}
+.nav-label{
+  padding:0 11px;
+  color:#b99a98;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.navigation{display:grid;gap:6px}
+.nav-btn{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:12px;
+  border:1px solid transparent;
+  border-radius:12px;
+  background:transparent;
+  color:#dfc9c5;
+  text-align:left;
+  font-weight:650;
+  transition:.18s;
+}
+.nav-btn:hover{background:#4a292e;color:white}
+.nav-btn.active{
+  background:linear-gradient(105deg,#bd293e,#901a2e);
+  color:white;
+  box-shadow:0 7px 20px #8e172b38;
+}
+.nav-icon{width:20px;text-align:center;font-size:17px}
+.sidebar-bottom{
+  margin-top:auto;
+  padding:15px;
+  border:1px solid #573338;
+  border-radius:14px;
+  background:#422329;
+  color:#e6d1cb;
+  font-size:12px;
+}
+.sidebar-bottom strong{display:block;color:#fff;margin-bottom:4px}
+
+.main{
+  min-width:0;
+  width:100%;
+  max-width:1600px;
+  margin:auto;
+  padding:30px clamp(17px,4vw,50px) 55px;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:26px;
+}
+.topbar small{
+  color:var(--muted);
+  font-size:12px;
+}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.local-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 11px;
+  border:1px solid #d9c9bf;
+  border-radius:99px;
+  background:#fff9f4;
+  color:#725c57;
+  font-size:11px;
+  font-weight:750;
+}
+.local-dot{width:7px;height:7px;border-radius:50%;background:#4f8b51}
+.menu-btn{display:none}
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  margin-bottom:25px;
+  padding:clamp(27px,4vw,46px);
+  border-radius:24px;
+  color:#fff8f4;
+  background:linear-gradient(118deg,#32191e 0%,#63202b 56%,#b51f35 100%);
+  box-shadow:0 17px 42px #4c1a241e;
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  width:280px;
+  height:280px;
+  right:-90px;
+  top:-125px;
+  border:1px solid #ffffff25;
+  border-radius:50%;
+  box-shadow:0 0 0 30px #ffffff08,0 0 0 65px #ffffff06;
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:1}
+.eyebrow{
+  color:var(--red);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.hero .eyebrow{color:#f2b8bd}
+.hero h1{
+  max-width:720px;
+  margin:13px 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(34px,5vw,57px);
+  font-weight:500;
+  line-height:1.04;
+  letter-spacing:-.04em;
+}
+.hero p{
+  max-width:650px;
+  margin:0 0 24px;
+  color:#f1d9d6;
+  font-size:15px;
+}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 15px;
+  border:1px solid transparent;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:800;
+  text-decoration:none;
+  transition:transform .18s,background .18s;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{
+  background:var(--red);
+  color:white;
+  box-shadow:0 6px 15px #a61e3020;
+}
+.btn-primary:hover{background:var(--red-dark)}
+.btn-secondary{
+  background:var(--surface);
+  border-color:var(--line);
+  color:var(--ink);
+}
+.btn-quiet{
+  background:transparent;
+  border-color:var(--line);
+  color:var(--muted);
+}
+.btn-danger{
+  background:#fff0ef;
+  border-color:#efc5c8;
+  color:#a21c30;
+}
+.hero .btn-primary{background:#fff8f3;color:#8e1b2d;box-shadow:none}
+.hero .btn-secondary{background:#ffffff10;border-color:#ffffff55;color:#fff}
+.btn-sm{padding:7px 10px;font-size:11px}
+
+.view{display:none}
+.view.active{display:block}
+
+.section{margin:27px 0}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:14px;
+  margin-bottom:15px;
+}
+.section-head h2{
+  margin:4px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:26px;
+  font-weight:500;
+  letter-spacing:-.03em;
+}
+.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+
+.grid{display:grid;gap:15px}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+.card,.panel,.metric{
+  min-width:0;
+  padding:19px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
+  box-shadow:var(--shadow);
+}
+.card h3,.panel h3{margin:0 0 6px;font-size:15px}
+.card p,.panel p{color:var(--muted)}
+.metric-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+}
+.metric-icon{
+  display:grid;
+  place-items:center;
+  width:35px;
+  height:35px;
+  border-radius:11px;
+  background:var(--red-light);
+  color:var(--red);
+  font-size:16px;
+}
+.metric-value{
+  margin:12px 0 3px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:34px;
+  line-height:1.2;
+  letter-spacing:-.04em;
+}
+.metric-note{color:var(--muted);font-size:11px}
+
+.field{display:grid;gap:7px;min-width:0}
+.field label{font-size:12px;font-weight:800;color:#654d49}
+.field small{font-size:11px;color:var(--muted)}
+.field input,.field textarea,.field select,
+input,textarea,select{
+  width:100%;
+  min-width:0;
+  padding:11px 12px;
+  border:1px solid #ddcbc2;
+  border-radius:10px;
+  background:#fffdfb;
+  color:var(--ink);
+}
+textarea{min-height:100px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--red);
+  outline:3px solid #b51f3515;
+}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field.full{grid-column:1/-1}
+.form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+
+.divider{height:1px;background:var(--line);margin:17px 0}
+.progress{
+  height:8px;
+  overflow:hidden;
+  border-radius:99px;
+  background:#eadbd4;
+}
+.progress span{
+  display:block;
+  height:100%;
+  border-radius:99px;
+  background:linear-gradient(90deg,#a91d32,#e35b67);
+  transition:width .25s;
+}
+.progress-label{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:750;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:4px 8px;
+  border-radius:99px;
+  background:#f7dfe1;
+  color:#921d30;
+  font-size:10px;
+  font-weight:850;
+}
+.badge.green{background:#e4eee2;color:#3e683f}
+.badge.amber{background:#f7ecd8;color:#855a19}
+.badge.gray{background:#eee7e2;color:#75645f}
+
+.list{display:grid;gap:10px}
+.list-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fffdfb;
+}
+.list-item-main{min-width:0}
+.list-item strong{display:block;overflow-wrap:anywhere}
+.list-item small{color:var(--muted)}
+.list-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+.task{
+  display:grid;
+  grid-template-columns:20px minmax(0,1fr) auto;
+  align-items:start;
+  gap:10px;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+.task:last-child{border-bottom:0}
+.task input{width:16px;height:16px;accent-color:var(--red);margin-top:4px}
+.task h4{margin:0;font-size:13px}
+.task p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.task.completed h4{text-decoration:line-through;color:var(--muted)}
+.task-meta{color:var(--muted);font-size:10px;white-space:nowrap}
+
+.empty{
+  padding:31px 18px;
+  border:1px dashed #d6bdb3;
+  border-radius:15px;
+  background:#fff9f5;
+  text-align:center;
+}
+.empty-icon{font-size:27px;margin-bottom:5px}
+.empty h3{margin:5px;font-family:Georgia,serif;font-size:23px;font-weight:500}
+.empty p{max-width:440px;margin:8px auto 16px;color:var(--muted);font-size:12px}
+
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+.tab{
+  padding:8px 12px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--surface);
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+}
+.tab.active{background:var(--burgundy);border-color:var(--burgundy);color:white}
+
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:530px;background:var(--surface)}
+th,td{padding:12px 13px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}
+th{
+  background:#f3e8e1;
+  color:#715853;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+tr:last-child td{border-bottom:0}
+
+.notice{
+  padding:13px 14px;
+  border:1px solid #edcbd0;
+  border-radius:12px;
+  background:#fff0ef;
+  color:#87313a;
+  font-size:12px;
+}
+.notice strong{display:block;margin-bottom:3px}
+.risk{
+  margin:9px 0;
+  padding:10px 12px;
+  border-left:3px solid var(--red);
+  border-radius:0 9px 9px 0;
+  background:#fff4f1;
+}
+.risk strong{display:block;font-size:12px}
+.risk small{color:var(--muted)}
+
+.score-row{
+  display:grid;
+  grid-template-columns:minmax(100px,1fr) 2fr 35px;
+  align-items:center;
+  gap:12px;
+  margin:14px 0;
+  font-size:12px;
+}
+.score-row input{padding:0;accent-color:var(--red)}
+.score-value{font-weight:850;color:var(--red);text-align:right}
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+  max-width:min(390px,calc(100vw - 40px));
+  padding:13px 17px;
+  border-radius:12px;
+  background:#321a1f;
+  color:white;
+  box-shadow:0 12px 35px #25111535;
+  opacity:0;
+  transform:translateY(12px);
+  pointer-events:none;
+  transition:.2s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.footer-note{margin-top:28px;text-align:center;color:var(--muted);font-size:10px}
+.muted{color:var(--muted)}
+.hidden{display:none!important}
+.search{max-width:300px}
+.small{font-size:11px}
+.word-break{overflow-wrap:anywhere}
+
+@media(max-width:1100px){
+  .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:800px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;
+    z-index:1000;
+    left:0;
+    top:0;
+    width:260px;
+    height:100dvh;
+    transform:translateX(-105%);
+    transition:transform .25s;
+    box-shadow:15px 0 40px #21111630;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .menu-btn{display:inline-flex}
+  .main{padding:18px 14px 35px}
+  .hero{padding:26px 22px}
+  .hero h1{font-size:38px}
+  .topbar{margin-bottom:18px}
+}
+@media(max-width:560px){
+  .grid-2,.grid-3,.grid-4,.form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .topbar-right .local-badge{display:none}
+  .hero h1{font-size:35px}
+  .section-head{align-items:flex-start;flex-direction:column}
+  .metric-value{font-size:30px}
+  .card,.panel,.metric{padding:15px}
+  .list-item{align-items:flex-start}
+  .score-row{grid-template-columns:85px minmax(50px,1fr) 30px}
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">G</div>
+      <div>
+        <div class="brand-name">GENESIS</div>
+        <div class="brand-sub">Idea to execution</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Workspace</div>
+    <nav class="navigation">
+      <button class="nav-btn active" data-view="dashboard"><span class="nav-icon">◈</span>Overview</button>
+      <button class="nav-btn" data-view="create"><span class="nav-icon">＋</span>Idea Studio</button>
+      <button class="nav-btn" data-view="projects"><span class="nav-icon">▤</span>Project Library</button>
+      <button class="nav-btn" data-view="strategy"><span class="nav-icon">⌘</span>Strategy Room</button>
+      <button class="nav-btn" data-view="analytics"><span class="nav-icon">↗</span>Performance</button>
+    </nav>
+
+    <div class="nav-label">Your workspace</div>
+    <nav class="navigation">
+      <button class="nav-btn" id="exportBtn"><span class="nav-icon">⇩</span>Export Backup</button>
+      <button class="nav-btn" id="importBtn"><span class="nav-icon">⇧</span>Import Backup</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <strong>Your work. Your direction.</strong>
+      Projects are saved locally in this browser. No subscription or account is required.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:11px">
+        <button class="btn btn-secondary menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div>
+          <div class="eyebrow">PROJECT GENESIS</div>
+          <small id="pageSubtitle">Your ideas, organised for action.</small>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="local-badge"><span class="local-dot"></span>Saved on this device</span>
+        <button class="btn btn-primary btn-sm" id="topNewBtn">＋ New project</button>
+      </div>
+    </header>
+
+    <!-- OVERVIEW -->
+    <section class="view active" id="view-dashboard">
+      <div class="hero">
+        <div class="hero-content">
+          <div class="eyebrow">A more considered way to build</div>
+          <h1>Make the idea<br>worth building.</h1>
+          <p>Turn promising ideas into focused plans, practical milestones, and measurable progress. Genesis gives your next project a place to take shape.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" id="heroNewBtn">＋ Build a project</button>
+            <button class="btn btn-secondary" id="heroLibraryBtn">Explore project library ↗</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <article class="metric">
+          <div class="metric-top">Total projects <span class="metric-icon">▤</span></div>
+          <div class="metric-value" id="statProjects">0</div>
+          <div class="metric-note">Ideas with a home</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Tasks completed <span class="metric-icon">✓</span></div>
+          <div class="metric-value" id="statTasks">0</div>
+          <div class="metric-note">Actions moved forward</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Overall progress <span class="metric-icon">↗</span></div>
+          <div class="metric-value" id="statProgress">0%</div>
+          <div class="metric-note">Across your portfolio</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Open tasks <span class="metric-icon">◷</span></div>
+          <div class="metric-value" id="statOpen">0</div>
+          <div class="metric-note">Next actions to complete</div>
+        </article>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Your portfolio</div>
+            <h2>Recently active</h2>
+            <p>Pick up where you left off.</p>
+          </div>
+          <button class="btn btn-secondary" data-goto="projects">View all projects →</button>
+        </div>
+        <div id="recentProjects" class="grid grid-2"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">A good place to begin</div>
+            <h2>Build with intention</h2>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <article class="card">
+            <div class="metric-icon">✦</div>
+            <h3>Clarify the idea</h3>
+            <p class="small">Define the problem, the audience, and the outcome you want to create.</p>
+          </article>
+          <article class="card">
+            <div class="metric-icon">◷</div>
+            <h3>Make it actionable</h3>
+            <p class="small">Break the bigger ambition into milestones and tasks you can complete.</p>
+          </article>
+          <article class="card">
+            <div class="metric-icon">↗</div>
+            <h3>Learn as you go</h3>
+            <p class="small">Track progress, review assumptions, and make decisions with more clarity.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREATE PROJECT -->
+    <section class="view" id="view-create">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Idea studio</div>
+          <h2>Give your idea a direction.</h2>
+          <p>Start with the essentials. You can refine the details later.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="panel">
+          <h3>Project brief</h3>
+          <p class="small">Describe what you want to create and why it matters.</p>
+          <form id="createForm">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="projectTitle">Project name *</label>
+                <input id="projectTitle" maxlength="100" required placeholder="e.g. Ranjos online store">
+              </div>
+              <div class="field">
+                <label for="projectType">Project type</label>
+                <select id="projectType">
+                  <option>Business</option>
+                  <option>Website</option>
+                  <option>Mobile App</option>
+                  <option>Creative Project</option>
+                  <option>Personal Goal</option>
+                  <option>Research</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="projectStatus">Starting status</label>
+                <select id="projectStatus">
+                  <option>Planning</option>
+                  <option>In Progress</option>
+                  <option>On Hold</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="projectIdea">The idea *</label>
+                <textarea id="projectIdea" maxlength="5000" required placeholder="What are you building? What problem will it solve?"></textarea>
+              </div>
+              <div class="field full">
+                <label for="projectAudience">Who is it for?</label>
+                <input id="projectAudience" maxlength="500" placeholder="Describe the people you want to serve">
+              </div>
+              <div class="field full">
+                <label for="projectOutcome">What does success look like?</label>
+                <textarea id="projectOutcome" maxlength="1500" placeholder="Describe the result you want to achieve"></textarea>
+              </div>
+              <div class="field">
+                <label for="projectBudget">Budget estimate</label>
+                <input id="projectBudget" placeholder="e.g. KSh 0">
+              </div>
+              <div class="field">
+                <label for="projectDeadline">Target date</label>
+                <input id="projectDeadline" type="date">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Create project →</button>
+              <button class="btn btn-quiet" type="reset">Clear form</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="eyebrow">Before you begin</div>
+          <h3 style="font-family:Georgia,serif;font-size:24px;font-weight:500">Small steps create momentum.</h3>
+          <p class="small">A project becomes easier to manage when you can explain it simply and identify the next useful action.</p>
+          <div class="divider"></div>
+          <div class="list">
+            <div class="list-item">
+              <div><strong>01 · Define</strong><small>Be clear about the problem.</small></div>
+              <span class="badge">Clarity</span>
+            </div>
+            <div class="list-item">
+              <div><strong>02 · Plan</strong><small>Identify the important milestones.</small></div>
+              <span class="badge">Structure</span>
+            </div>
+            <div class="list-item">
+              <div><strong>03 · Execute</strong><small>Choose a realistic next action.</small></div>
+              <span class="badge">Progress</span>
+            </div>
+            <div class="list-item">
+              <div><strong>04 · Review</strong><small>Use evidence to adjust your approach.</small></div>
+              <span class="badge">Learning</span>
+            </div>
+          </div>
+          <div class="notice" style="margin-top:17px">
+            <strong>Built for practical work</strong>
+            Genesis works offline in your browser. It does not require a paid AI service to manage projects.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT LIBRARY -->
+    <section class="view" id="view-projects">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Project library</div>
+          <h2>Your ideas, in one place.</h2>
+          <p>Open a project to manage its plan, tasks, and milestones.</p>
+        </div>
+        <button class="btn btn-primary" id="libraryNewBtn">＋ New project</button>
+      </div>
+      <div class="panel">
+        <div class="field search">
+          <label for="projectSearch">Find a project</label>
+          <input id="projectSearch" placeholder="Search by name, type, or description...">
+        </div>
+        <div class="divider"></div>
+        <div id="projectList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- PROJECT DETAIL -->
+    <section class="view" id="view-detail">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Project workspace</div>
+          <h2 id="detailTitle">Project details</h2>
+          <p id="detailSubtitle">Your execution plan.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-secondary" id="detailBackBtn">← Project library</button>
+          <button class="btn btn-primary" id="duplicateBtn">Duplicate</button>
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <article class="metric">
+          <div class="metric-top">Progress <span class="metric-icon">↗</span></div>
+          <div class="metric-value" id="detailProgress">0%</div>
+          <div class="progress"><span id="detailProgressBar" style="width:0%"></span></div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Tasks <span class="metric-icon">☷</span></div>
+          <div class="metric-value" id="detailTasks">0</div>
+          <div class="metric-note">Actions in your plan</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Completed <span class="metric-icon">✓</span></div>
+          <div class="metric-value" id="detailDone">0</div>
+          <div class="metric-note">Tasks finished</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Milestones <span class="metric-icon">◆</span></div>
+          <div class="metric-value" id="detailMilestones">0</div>
+          <div class="metric-note">Key points on the journey</div>
+        </article>
+      </div>
+
+      <div class="section">
+        <div class="grid grid-2">
+          <div class="panel">
+            <div class="section-head">
+              <div><div class="eyebrow">Execution blueprint</div><h2 style="font-size:22px">Your next actions</h2></div>
+            </div>
+            <form id="taskForm">
+              <div class="field">
+                <label for="taskTitle">Task name *</label>
+                <input id="taskTitle" required maxlength="180" placeholder="What needs to happen next?">
+              </div>
+              <div class="form-grid" style="margin-top:12px">
+                <div class="field">
+                  <label for="taskPhase">Phase</label>
+                  <select id="taskPhase">
+                    <option>Planning</option>
+                    <option>Research</option>
+                    <option>Design</option>
+                    <option>Development</option>
+                    <option>Validation</option>
+                    <option>Launch</option>
+                    <option>Growth</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="taskDue">Due date</label>
+                  <input id="taskDue" type="date">
+                </div>
+                <div class="field full">
+                  <label for="taskDescription">Notes (optional)</label>
+                  <input id="taskDescription" maxlength="500" placeholder="Useful context or a clear outcome">
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit">＋ Add task</button>
+              </div>
+            </form>
+            <div class="divider"></div>
+            <div id="taskList" class="list"></div>
+          </div>
+
+          <div style="display:grid;gap:15px;align-content:start">
+            <div class="panel">
+              <div class="eyebrow">Milestone tracking</div>
+              <h3>Mark the meaningful moments.</h3>
+              <p class="small">Milestones help you see progress beyond the daily task list.</p>
+              <form id="milestoneForm">
+                <div class="field">
+                  <label for="milestoneTitle">Milestone name</label>
+                  <input id="milestoneTitle" required maxlength="150" placeholder="e.g. First working prototype">
+                </div>
+                <div class="form-actions"><button class="btn btn-secondary" type="submit">＋ Add milestone</button></div>
+              </form>
+              <div class="divider"></div>
+              <div id="milestoneList" class="list"></div>
+            </div>
+
+            <div class="panel">
+              <div class="eyebrow">Working notes</div>
+              <h3>Keep the context close.</h3>
+              <textarea id="projectNotes" placeholder="Decisions, reminders, useful links, or things to revisit..."></textarea>
+              <p class="small" id="notesStatus">Notes save automatically.</p>
+            </div>
+
+            <div class="panel">
+              <div class="eyebrow">Project settings</div>
+              <div class="field">
+                <label for="detailStatus">Current status</label>
+                <select id="detailStatus">
+                  <option>Planning</option>
+                  <option>In Progress</option>
+                  <option>On Hold</option>
+                  <option>Completed</option>
+                </select>
+              </div>
+              <div class="field" style="margin-top:12px">
+                <label for="detailDeadline">Target date</label>
+                <input id="detailDeadline" type="date">
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-secondary" id="saveDetailsBtn" type="button">Save changes</button>
+                <button class="btn btn-danger" id="deleteProjectBtn" type="button">Delete project</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STRATEGY ROOM -->
+    <section class="view" id="view-strategy">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Strategy room</div>
+          <h2>Think before you scale.</h2>
+          <p>Review an idea's potential and record the assumptions that need testing.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="panel">
+          <h3>Choose a project</h3>
+          <div class="field">
+            <label for="strategyProject">Project to evaluate</label>
+            <select id="strategyProject"></select>
+          </div>
+          <div class="divider"></div>
+          <h3>Idea assessment</h3>
+          <p class="small">Score each area from 1 (weak) to 5 (strong). This is a thinking aid, not verified market research.</p>
+          <div id="scoreInputs"></div>
+          <div class="divider"></div>
+          <div class="metric-top">Average assessment <span class="badge" id="scoreLabel">Not scored</span></div>
+          <div class="metric-value" id="scoreAverage">—</div>
+          <div class="progress"><span id="scoreBar" style="width:0%"></span></div>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveScoreBtn" type="button">Save assessment</button>
+          </div>
+          <p class="small" id="scoreSaved"></p>
+        </div>
+
+        <div class="panel">
+          <div class="eyebrow">SWOT notes</div>
+          <h3>Look at the whole picture.</h3>
+          <p class="small">Record what may help the project and what could hold it back.</p>
+          <div class="field">
+            <label for="swotStrengths">Strengths</label>
+            <textarea id="swotStrengths" placeholder="What advantages do you have?"></textarea>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="swotWeaknesses">Weaknesses</label>
+            <textarea id="swotWeaknesses" placeholder="What needs improvement?"></textarea>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="swotOpportunities">Opportunities</label>
+            <textarea id="swotOpportunities" placeholder="What external opportunities exist?"></textarea>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="swotThreats">Threats</label>
+            <textarea id="swotThreats" placeholder="What could put the project at risk?"></textarea>
+          </div>
+          <div class="form-actions"><button class="btn btn-secondary" id="saveSwotBtn" type="button">Save SWOT notes</button></div>
+          <p class="small" id="swotStatus"></p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="eyebrow">Risk register</div>
+          <h3>Identify uncertainty early.</h3>
+          <form id="riskForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="riskTitle">Risk or assumption *</label>
+                <input id="riskTitle" required maxlength="250" placeholder="What might prevent success?">
+              </div>
+              <div class="field">
+                <label for="riskLevel">Likelihood</label>
+                <select id="riskLevel">
+                  <option>Low</option>
+                  <option selected>Medium</option>
+                  <option>High</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="riskResponse">Response or mitigation</label>
+                <textarea id="riskResponse" placeholder="How will you reduce or test this risk?"></textarea>
+              </div>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">＋ Record risk</button></div>
+          </form>
+          <div class="divider"></div>
+          <div id="riskList" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERFORMANCE -->
+    <section class="view" id="view-analytics">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Performance overview</div>
+          <h2>Measure what is moving.</h2>
+          <p>A portfolio-level view of activity and execution.</p>
+        </div>
+        <button class="btn btn-secondary" id="exportReportBtn">Export report</button>
+      </div>
+      <div class="grid grid-3">
+        <article class="metric">
+          <div class="metric-top">Projects in progress <span class="metric-icon">↗</span></div>
+          <div class="metric-value" id="analyticsActive">0</div>
+          <div class="metric-note">Currently moving forward</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Milestones completed <span class="metric-icon">◆</span></div>
+          <div class="metric-value" id="analyticsMilestones">0</div>
+          <div class="metric-note">Key outcomes achieved</div>
+        </article>
+        <article class="metric">
+          <div class="metric-top">Completion rate <span class="metric-icon">✓</span></div>
+          <div class="metric-value" id="analyticsRate">0%</div>
+          <div class="metric-note">Completed tasks divided by all tasks</div>
+        </article>
+      </div>
+      <div class="section">
+        <div class="panel">
+          <h3>Project performance</h3>
+          <p class="small">Review each project's current completion level.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Project</th><th>Status</th><th>Tasks</th><th>Progress</th><th>Target date</th></tr></thead>
+              <tbody id="analyticsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">PROJECT GENESIS · A practical workspace for ideas and execution</div>
+  </main>
+</div>
+
+<input type="file" id="importFile" accept=".json,application/json" class="hidden">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* PROJECT GENESIS
+   Complete local-first application.
+   No external libraries, paid services, or API keys required.
+*/
+
+const STORAGE_KEY = "project_genesis_v01";
+const CURRENT_KEY = "project_genesis_current";
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+
+let projects = [];
+let currentProjectId = null;
+let toastTimer = null;
+let notesTimer = null;
+
+const SCORE_CATEGORIES = [
+  {key:"problem",label:"Problem clarity"},
+  {key:"audience",label:"Audience understanding"},
+  {key:"demand",label:"Evidence of demand"},
+  {key:"feasibility",label:"Ability to deliver"},
+  {key:"economics",label:"Financial sustainability"}
+];
+
+function uid(){
+  return "p_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,9);
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
+}
+
+function safeDate(value){
+  if(!value)return "";
+  const d=new Date(value+"T00:00:00");
+  return Number.isNaN(d.getTime())?"":d.toLocaleDateString(undefined,{
+    day:"numeric",month:"short",year:"numeric"
+  });
+}
+
+function todayISO(){
+  const d=new Date();
+  const offset=d.getTimezoneOffset();
+  return new Date(d.getTime()-offset*60000).toISOString().slice(0,10);
+}
+
+function toast(message){
+  const el=$("#toast");
+  el.textContent=message;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),2800);
+}
+
+function normalizeProject(raw){
+  const p=raw && typeof raw==="object"?raw:{};
+  return {
+    id:typeof p.id==="string"?p.id:uid(),
+    title:String(p.title||"Untitled project"),
+    type:String(p.type||"Other"),
+    status:String(p.status||"Planning"),
+    idea:String(p.idea||""),
+    audience:String(p.audience||""),
+    outcome:String(p.outcome||""),
+    budget:String(p.budget||""),
+    deadline:String(p.deadline||""),
+    notes:String(p.notes||""),
+    createdAt:p.createdAt||new Date().toISOString(),
+    updatedAt:p.updatedAt||new Date().toISOString(),
+    tasks:Array.isArray(p.tasks)?p.tasks.map(t=>({
+      id:t.id||uid(),
+      title:String(t.title||"Untitled task"),
+      phase:String(t.phase||"Planning"),
+      description:String(t.description||""),
+      dueDate:String(t.dueDate||""),
+      done:Boolean(t.done),
+      createdAt:t.createdAt||new Date().toISOString()
+    })) : [],
+    milestones:Array.isArray(p.milestones)?p.milestones.map(m=>({
+      id:m.id||uid(),
+      title:String(m.title||"Milestone"),
+      done:Boolean(m.done)
+    })) : [],
+    risks:Array.isArray(p.risks)?p.risks.map(r=>({
+      id:r.id||uid(),
+      title:String(r.title||"Risk"),
+      level:String(r.level||"Medium"),
+      response:String(r.response||"")
+    })) : [],
+    scores:p.scores&&typeof p.scores==="object"?p.scores:{},
+    swot:p.swot&&typeof p.swot==="object"?{
+      strengths:String(p.swot.strengths||""),
+      weaknesses:String(p.swot.weaknesses||""),
+      opportunities:String(p.swot.opportunities||""),
+      threats:String(p.swot.threats||"")
+    }:{strengths:"",weaknesses:"",opportunities:"",threats:""}
+  };
+}
+
+function loadData(){
+  try{
+    const saved=localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed=JSON.parse(saved);
+      projects=Array.isArray(parsed)?parsed.map(normalizeProject):[];
+    }
+  }catch(error){
+    console.error("Could not load Genesis data:",error);
+    projects=[];
+    toast("Saved data could not be read. You can import a backup.");
+  }
+  currentProjectId=localStorage.getItem(CURRENT_KEY)||null;
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(projects));
+    if(currentProjectId)localStorage.setItem(CURRENT_KEY,currentProjectId);
+    else localStorage.removeItem(CURRENT_KEY);
+    updateDashboard();
+    updateAnalytics();
+    updateStrategyOptions();
+    return true;
+  }catch(error){
+    console.error("Could not save Genesis data:",error);
+    toast("Storage is full. Export a backup and remove unused data.");
+    return false;
+  }
+}
+
+function currentProject(){
+  return projects.find(p=>p.id===currentProjectId)||null;
+}
+
+function progressOf(project){
+  const total=project.tasks.length;
+  const done=project.tasks.filter(t=>t.done).length;
+  return {total,done,percent:total?Math.round(done/total*100):0};
+}
+
+function statusBadge(status){
+  let type="gray";
+  if(status==="In Progress")type="green";
+  if(status==="On Hold")type="amber";
+  if(status==="Completed")type="green";
+  return `<span class="badge ${type}">${escapeHTML(status)}</span>`;
+}
+
+function setView(name){
+  const target=$("#view-"+name);
+  if(!target)return;
+  $$(".view").forEach(v=>v.classList.toggle("active",v===target));
+  $$(".nav-btn[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+  const labels={
+    dashboard:"Your ideas, organised for action.",
+    create:"Turn an idea into a structured project.",
+    projects:"Browse and manage your project portfolio.",
+    detail:"Manage the plan and move work forward.",
+    strategy:"Test your thinking before you commit.",
+    analytics:"A clear view of your project activity."
+  };
+  $("#pageSubtitle").textContent=labels[name]||"Project Genesis";
+  $("#sidebar").classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(name==="projects")renderProjectList();
+  if(name==="strategy")renderStrategy();
+  if(name==="detail")renderDetail();
+  updateDashboard();
+}
+
+function createProject(event){
+  event.preventDefault();
+
+  const title=$("#projectTitle").value.trim();
+  const idea=$("#projectIdea").value.trim();
+
+  if(!title||!idea){
+    toast("Add a project name and describe your idea first.");
+    return;
+  }
+
+  const p=normalizeProject({
+    id:uid(),
+    title,
+    type:$("#projectType").value,
+    status:$("#projectStatus").value,
+    idea,
+    audience:$("#projectAudience").value.trim(),
+    outcome:$("#projectOutcome").value.trim(),
+    budget:$("#projectBudget").value.trim(),
+    deadline:$("#projectDeadline").value,
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString(),
+    tasks:[],
+    milestones:[],
+    risks:[],
+    scores:{},
+    swot:{strengths:"",weaknesses:"",opportunities:"",threats:""}
+  });
+
+  projects.unshift(p);
+  currentProjectId=p.id;
+  saveData();
+  $("#createForm").reset();
+  renderProjectList();
+  renderDetail();
+  setView("detail");
+  toast("Project created. Your workspace is ready.");
+}
+
+function openProject(id){
+  const p=projects.find(project=>project.id===id);
+  if(!p)return;
+  currentProjectId=p.id;
+  localStorage.setItem(CURRENT_KEY,p.id);
+  renderDetail();
+  setView("detail");
+}
+
+function renderRecent(){
+  const container=$("#recentProjects");
+  const recent=[...projects].sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt)).slice(0,4);
+
+  if(!recent.length){
+    container.innerHTML=`
+      <div class="empty" style="grid-column:1/-1">
+        <div class="empty-icon">✦</div>
+        <h3>Your next big idea starts here.</h3>
+        <p>Create a project to organise your thinking, set milestones, and track the work ahead.</p>
+        <button class="btn btn-primary" data-goto="create">Create your first project →</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML=recent.map(p=>{
+    const pr=progressOf(p);
+    return `
+      <article class="card">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+          <span class="badge">${escapeHTML(p.type)}</span>
+          ${statusBadge(p.status)}
+        </div>
+        <h3 style="margin-top:13px">${escapeHTML(p.title)}</h3>
+        <p class="small">${escapeHTML(p.idea.slice(0,125))}${p.idea.length>125?"…":""}</p>
+        <div class="progress-label"><span>Execution progress</span><strong>${pr.percent}%</strong></div>
+        <div class="progress"><span style="width:${pr.percent}%"></span></div>
+        <div class="form-actions">
+          <button class="btn btn-secondary btn-sm" data-open="${escapeHTML(p.id)}">Open workspace →</button>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+function renderProjectList(){
+  const container=$("#projectList");
+  const search=($("#projectSearch").value||"").trim().toLowerCase();
+  const list=projects.filter(p=>
+    [p.title,p.type,p.idea,p.status].some(v=>String(v).toLowerCase().includes(search))
+  );
+
+  if(!list.length){
+    container.innerHTML=`
+      <div class="empty">
+        <div class="empty-icon">▤</div>
+        <h3>${projects.length?"No matching projects":"Your project library is waiting."}</h3>
+        <p>${projects.length?"Try a different search phrase.":"Create your first project and start turning an idea into action."}</p>
+        <button class="btn btn-primary" data-goto="create">＋ Create project</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML=list.map(p=>{
+    const pr=progressOf(p);
+    return `
+      <div class="list-item">
+        <div class="list-item-main">
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:5px">
+            <span class="badge">${escapeHTML(p.type)}</span>${statusBadge(p.status)}
+          </div>
+          <strong>${escapeHTML(p.title)}</strong>
+          <small>${escapeHTML(p.idea.slice(0,100))}${p.idea.length>100?"…":""}</small>
+          <div style="max-width:360px;margin-top:9px">
+            <div class="progress-label"><span>${pr.done} of ${pr.total} tasks complete</span><strong>${pr.percent}%</strong></div>
+            <div class="progress"><span style="width:${pr.percent}%"></span></div>
+          </div>
+        </div>
+        <div class="list-actions">
+          <button class="btn btn-primary btn-sm" data-open="${escapeHTML(p.id)}">Open →</button>
+          <button class="btn btn-secondary btn-sm" data-export-project="${escapeHTML(p.id)}">Backup</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function renderDetail(){
+  const p=currentProject();
+  if(!p){
+    setView("projects");
+    return;
+  }
+
+  const pr=progressOf(p);
+  $("#detailTitle").textContent=p.title;
+  $("#detailSubtitle").textContent=p.type+" · Created "+new Date(p.createdAt).toLocaleDateString();
+  $("#detailProgress").textContent=pr.percent+"%";
+  $("#detailProgressBar").style.width=pr.percent+"%";
+  $("#detailTasks").textContent=pr.total;
+  $("#detailDone").textContent=pr.done;
+  $("#detailMilestones").textContent=p.milestones.filter(m=>m.done).length+" / "+p.milestones.length;
+  $("#detailStatus").value=p.status;
+  $("#detailDeadline").value=p.deadline||"";
+  $("#projectNotes").value=p.notes||"";
+  $("#notesStatus").textContent="Notes save automatically.";
+
+  const taskList=$("#taskList");
+  if(!p.tasks.length){
+    taskList.innerHTML=`<div class="empty"><div class="empty-icon">◷</div><h3>Start with one action.</h3><p>Add the next practical task that will move this project forward.</p></div>`;
+  }else{
+    taskList.innerHTML=p.tasks.map(t=>`
+      <div class="task ${t.done?"completed":""}">
+        <input type="checkbox" data-task-check="${escapeHTML(t.id)}" ${t.done?"checked":""} aria-label="Mark ${escapeHTML(t.title)} complete">
+        <div>
+          <h4>${escapeHTML(t.title)}</h4>
+          <p>${escapeHTML(t.phase)}${t.description?" · "+escapeHTML(t.description):""}</p>
+          ${t.dueDate?`<p>Due ${escapeHTML(safeDate(t.dueDate))}</p>`:""}
+        </div>
+        <button class="btn btn-quiet btn-sm" data-delete-task="${escapeHTML(t.id)}" aria-label="Delete task">Remove</button>
+      </div>`).join("");
+  }
+
+  const milestoneList=$("#milestoneList");
+  if(!p.milestones.length){
+    milestoneList.innerHTML=`<p class="small muted">No milestones yet. Add one when you reach a meaningful checkpoint.</p>`;
+  }else{
+    milestoneList.innerHTML=p.milestones.map(m=>`
+      <div class="list-item">
+        <label style="display:flex;gap:9px;align-items:center;min-width:0">
+          <input style="width:16px;accent-color:var(--red)" type="checkbox" data-milestone-check="${escapeHTML(m.id)}" ${m.done?"checked":""}>
+          <span class="${m.done?"muted":""}" style="${m.done?"text-decoration:line-through":""}">${escapeHTML(m.title)}</span>
+        </label>
+        <button class="btn btn-quiet btn-sm" data-delete-milestone="${escapeHTML(m.id)}">×</button>
+      </div>`).join("");
+  }
+}
+
+function renderStrategy(){
+  updateStrategyOptions();
+  const p=currentProject();
+  const selected=$("#strategyProject").value;
+  const chosen=projects.find(x=>x.id===selected)||p;
+  if(!chosen){
+    $("#scoreInputs").innerHTML='<p class="muted small">Create a project before assessing an idea.</p>';
+    $("#scoreAverage").textContent="—";
+    $("#scoreBar").style.width="0%";
+    $("#riskList").innerHTML='<p class="muted small">Create a project to begin a risk register.</p>';
+    return;
+  }
+
+  $("#strategyProject").value=chosen.id;
+  $("#scoreInputs").innerHTML=SCORE_CATEGORIES.map(category=>{
+    const value=Number(chosen.scores[category.key]||3);
+    return `
+      <div class="score-row">
+        <label for="score-${category.key}">${category.label}</label>
+        <input type="range" min="1" max="5" step="1" value="${value}" id="score-${category.key}" data-score="${category.key}">
+        <span class="score-value" id="score-value-${category.key}">${value}/5</span>
+      </div>`;
+  }).join("");
+
+  $("#swotStrengths").value=chosen.swot.strengths||"";
+  $("#swotWeaknesses").value=chosen.swot.weaknesses||"";
+  $("#swotOpportunities").value=chosen.swot.opportunities||"";
+  $("#swotThreats").value=chosen.swot.threats||"";
+  updateScore();
+  renderRisks(chosen);
+}
+
+function updateStrategyOptions(){
+  const select=$("#strategyProject");
+  if(!select)return;
+  const previous=select.value||currentProjectId;
+  if(!projects.length){
+    select.innerHTML='<option value="">No projects available</option>';
+    return;
+  }
+  select.innerHTML=projects.map(p=>`<option value="${escapeHTML(p.id)}">${escapeHTML(p.title)}</option>`).join("");
+  if(projects.some(p=>p.id===previous))select.value=previous;
+  else select.value=projects[0].id;
+}
+
+function updateScore(){
+  const inputs=$$("[data-score]");
+  if(!inputs.length)return;
+  let total=0;
+  inputs.forEach(input=>{
+    const value=Number(input.value);
+    total+=value;
+    const output=$("#score-value-"+input.dataset.score);
+    if(output)output.textContent=value+"/5";
+  });
+  const average=total/inputs.length;
+  $("#scoreAverage").textContent=average.toFixed(1)+" / 5";
+  $("#scoreBar").style.width=(average/5*100)+"%";
+  const label=average>=4?"Strong starting point":average>=3?"Promising — validate":"Needs more clarity";
+  $("#scoreLabel").textContent=label;
+  $("#scoreLabel").className="badge "+(average>=4?"green":average>=3?"amber":"gray");
+}
+
+function renderRisks(p){
+  const container=$("#riskList");
+  if(!p||!p.risks.length){
+    container.innerHTML='<p class="small muted">No risks recorded yet. Add uncertainties you want to investigate.</p>';
+    return;
+  }
+  container.innerHTML=p.risks.map(r=>`
+    <div class="risk">
+      <div style="display:flex;justify-content:space-between;gap:10px">
+        <strong>${escapeHTML(r.title)}</strong>
+        <button class="btn btn-quiet btn-sm" data-delete-risk="${escapeHTML(r.id)}">Remove</button>
+      </div>
+      <small>Likelihood: ${escapeHTML(r.level)}</small>
+      ${r.response?`<p class="small" style="margin:5px 0 0">${escapeHTML(r.response)}</p>`:""}
+    </div>`).join("");
+}
+
+function updateDashboard(){
+  $("#statProjects").textContent=projects.length;
+  const allTasks=projects.flatMap(p=>p.tasks);
+  const done=allTasks.filter(t=>t.done).length;
+  $("#statTasks").textContent=done;
+  $("#statOpen").textContent=allTasks.length-done;
+  $("#statProgress").textContent=(allTasks.length?Math.round(done/allTasks.length*100):0)+"%";
+  renderRecent();
+}
+
+function updateAnalytics(){
+  const allTasks=projects.flatMap(p=>p.tasks);
+  const done=allTasks.filter(t=>t.done).length;
+  $("#analyticsActive").textContent=projects.filter(p=>p.status==="In Progress").length;
+  $("#analyticsMilestones").textContent=projects.reduce((sum,p)=>sum+p.milestones.filter(m=>m.done).length,0);
+  $("#analyticsRate").textContent=(allTasks.length?Math.round(done/allTasks.length*100):0)+"%";
+
+  const tbody=$("#analyticsTable");
+  if(!projects.length){
+    tbody.innerHTML='<tr><td colspan="5" class="muted">Your project metrics will appear here after you create a project.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=projects.map(p=>{
+    const pr=progressOf(p);
+    return `<tr>
+      <td><button class="btn btn-quiet btn-sm" data-open="${escapeHTML(p.id)}">${escapeHTML(p.title)}</button></td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${pr.done}/${pr.total}</td>
+      <td style="min-width:110px"><div class="progress-label"><strong>${pr.percent}%</strong></div><div class="progress"><span style="width:${pr.percent}%"></span></div></td>
+      <td>${escapeHTML(safeDate(p.deadline)||"—")}</td>
+    </tr>`;
+  }).join("");
+}
+
+function exportBackup(){
+  const data={
+    app:"Project Genesis",
+    version:1,
+    exportedAt:new Date().toISOString(),
+    projects
+  };
+  downloadFile("project-genesis-backup.json",JSON.stringify(data,null,2),"application/json");
+  toast("Workspace backup exported.");
+}
+
+function exportSingleProject(id){
+  const p=projects.find(x=>x.id===id);
+  if(!p)return;
+  downloadFile("genesis-"+slug(p.title)+".json",JSON.stringify({app:"Project Genesis",version:1,projects:[p]},null,2),"application/json");
+  toast("Project backup exported.");
+}
+
+function exportReport(){
+  const report={
+    generatedAt:new Date().toISOString(),
+    totals:{
+      projects:projects.length,
+      tasks:projects.reduce((n,p)=>n+p.tasks.length,0),
+      completedTasks:projects.reduce((n,p)=>n+p.tasks.filter(t=>t.done).length,0),
+      completedMilestones:projects.reduce((n,p)=>n+p.milestones.filter(m=>m.done).length,0)
+    },
+    projects:projects.map(p=>({
+      title:p.title,
+      type:p.type,
+      status:p.status,
+      deadline:p.deadline,
+      progress:progressOf(p),
+      risks:p.risks.length
+    }))
+  };
+  downloadFile("genesis-performance-report.json",JSON.stringify(report,null,2),"application/json");
+  toast("Performance report exported.");
+}
+
+function downloadFile(filename,content,type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download=filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function slug(value){
+  return String(value).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,55)||"project";
+}
+
+function duplicateProject(){
+  const p=currentProject();
+  if(!p)return;
+  const copy=JSON.parse(JSON.stringify(p));
+  copy.id=uid();
+  copy.title=p.title+" (copy)";
+  copy.status="Planning";
+  copy.createdAt=new Date().toISOString();
+  copy.updatedAt=copy.createdAt;
+  copy.tasks=copy.tasks.map(t=>({...t,id:uid(),done:false}));
+  copy.milestones=copy.milestones.map(m=>({...m,id:uid(),done:false}));
+  projects.unshift(normalizeProject(copy));
+  currentProjectId=copy.id;
+  saveData();
+  renderDetail();
+  toast("Project duplicated.");
+}
+
+function deleteCurrentProject(){
+  const p=currentProject();
+  if(!p)return;
+  if(!confirm(`Delete "${p.title}" permanently from this browser? Export a backup first if you need it.`))return;
+  projects=projects.filter(x=>x.id!==p.id);
+  currentProjectId=projects[0]?.id||null;
+  saveData();
+  renderProjectList();
+  renderDetail();
+  setView("projects");
+  toast("Project deleted.");
+}
+
+function handleTaskSubmit(event){
+  event.preventDefault();
+  const p=currentProject();
+  if(!p)return;
+  const title=$("#taskTitle").value.trim();
+  if(!title)return;
+  p.tasks.push({
+    id:uid(),
+    title,
+    phase:$("#taskPhase").value,
+    description:$("#taskDescription").value.trim(),
+    dueDate:$("#taskDue").value,
+    done:false,
+    createdAt:new Date().toISOString()
+  });
+  p.updatedAt=new Date().toISOString();
+  $("#taskForm").reset();
+  saveData();
+  renderDetail();
+  toast("Task added to your plan.");
+}
+
+function handleMilestoneSubmit(event){
+  event.preventDefault();
+  const p=currentProject();
+  if(!p)return;
+  const title=$("#milestoneTitle").value.trim();
+  if(!title)return;
+  p.milestones.push({id:uid(),title,done:false});
+  p.updatedAt=new Date().toISOString();
+  $("#milestoneForm").reset();
+  saveData();
+  renderDetail();
+  toast("Milestone added.");
+}
+
+function saveProjectDetails(){
+  const p=currentProject();
+  if(!p)return;
+  p.status=$("#detailStatus").value;
+  p.deadline=$("#detailDeadline").value;
+  p.updatedAt=new Date().toISOString();
+  saveData();
+  renderDetail();
+  toast("Project details saved.");
+}
+
+function saveNotes(){
+  const p=currentProject();
+  if(!p)return;
+  p.notes=$("#projectNotes").value;
+  p.updatedAt=new Date().toISOString();
+  $("#notesStatus").textContent="Saving…";
+  clearTimeout(notesTimer);
+  notesTimer=setTimeout(()=>{
+    saveData();
+    $("#notesStatus").textContent="Saved locally at "+new Date().toLocaleTimeString();
+  },350);
+}
+
+function saveStrategyScore(){
+  const p=projects.find(x=>x.id===$("#strategyProject").value);
+  if(!p){toast("Create a project first.");return;}
+  const scores={};
+  $$("[data-score]").forEach(el=>scores[el.dataset.score]=Number(el.value));
+  p.scores=scores;
+  p.updatedAt=new Date().toISOString();
+  saveData();
+  $("#scoreSaved").textContent="Assessment saved locally.";
+  toast("Idea assessment saved.");
+}
+
+function saveSwot(){
+  const p=projects.find(x=>x.id===$("#strategyProject").value);
+  if(!p){toast("Create a project first.");return;}
+  p.swot={
+    strengths:$("#swotStrengths").value,
+    weaknesses:$("#swotWeaknesses").value,
+    opportunities:$("#swotOpportunities").value,
+    threats:$("#swotThreats").value
+  };
+  p.updatedAt=new Date().toISOString();
+  saveData();
+  $("#swotStatus").textContent="SWOT notes saved locally.";
+  toast("SWOT notes saved.");
+}
+
+function handleRiskSubmit(event){
+  event.preventDefault();
+  const p=projects.find(x=>x.id===$("#strategyProject").value);
+  if(!p){toast("Create a project first.");return;}
+  const title=$("#riskTitle").value.trim();
+  if(!title)return;
+  p.risks.push({
+    id:uid(),
+    title,
+    level:$("#riskLevel").value,
+    response:$("#riskResponse").value.trim()
+  });
+  p.updatedAt=new Date().toISOString();
+  $("#riskForm").reset();
+  saveData();
+  renderStrategy();
+  toast("Risk recorded.");
+}
+
+function deleteItem(collectionName,itemId){
+  const p=currentProject();
+  if(!p)return;
+  if(!confirm("Remove this item?"))return;
+  p[collectionName]=p[collectionName].filter(item=>item.id!==itemId);
+  p.updatedAt=new Date().toISOString();
+  saveData();
+  renderDetail();
+  renderStrategy();
+}
+
+function importBackup(file){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      const incoming=Array.isArray(parsed)?parsed:parsed.projects;
+      if(!Array.isArray(incoming))throw new Error("This file does not contain a project list.");
+
+      let added=0;
+      incoming.forEach(raw=>{
+        if(!raw||typeof raw!=="object"||typeof raw.title!=="string")return;
+        const p=normalizeProject(raw);
+        if(!projects.some(existing=>existing.id===p.id)){
+          projects.push(p);
+          added++;
+        }
+      });
+
+      saveData();
+      renderProjectList();
+      renderDetail();
+      toast("Imported "+added+" new project(s). Existing projects were not duplicated.");
+    }catch(error){
+      alert("Could not import this backup: "+error.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function bindEvents(){
+  $("#createForm").addEventListener("submit",createProject);
+  $("#taskForm").addEventListener("submit",handleTaskSubmit);
+  $("#milestoneForm").addEventListener("submit",handleMilestoneSubmit);
+
+  $("#menuBtn").addEventListener("click",()=>$("#sidebar").classList.toggle("open"));
+  $("#topNewBtn").addEventListener("click",()=>setView("create"));
+  $("#heroNewBtn").addEventListener("click",()=>setView("create"));
+  $("#libraryNewBtn").addEventListener("click",()=>setView("create"));
+  $("#heroLibraryBtn").addEventListener("click",()=>setView("projects"));
+  $("#detailBackBtn").addEventListener("click",()=>setView("projects"));
+  $("#duplicateBtn").addEventListener("click",duplicateProject);
+  $("#deleteProjectBtn").addEventListener("click",deleteCurrentProject);
+  $("#saveDetailsBtn").addEventListener("click",saveProjectDetails);
+  $("#exportBtn").addEventListener("click",exportBackup);
+  $("#exportReportBtn").addEventListener("click",exportReport);
+  $("#importBtn").addEventListener("click",()=>$("#importFile").click());
+
+  $("#importFile").addEventListener("change",event=>{
+    const file=event.target.files?.[0];
+    if(file)importBackup(file);
+    event.target.value="";
+  });
+
+  $("#projectSearch").addEventListener("input",renderProjectList);
+  $("#projectNotes").addEventListener("input",saveNotes);
+  $("#detailStatus").addEventListener("change",saveProjectDetails);
+  $("#detailDeadline").addEventListener("change",saveProjectDetails);
+
+  $("#strategyProject").addEventListener("change",renderStrategy);
+  $("#saveScoreBtn").addEventListener("click",saveStrategyScore);
+  $("#saveSwotBtn").addEventListener("click",saveSwot);
+  $("#riskForm").addEventListener("submit",handleRiskSubmit);
+
+  $("#scoreInputs").addEventListener("input",event=>{
+    if(event.target.matches("[data-score]"))updateScore();
+  });
+
+  $("#taskList").addEventListener("change",event=>{
+    const checkbox=event.target.closest("[data-task-check]");
+    if(!checkbox)return;
+    const p=currentProject();
+    if(!p)return;
+    const task=p.tasks.find(t=>t.id===checkbox.dataset.taskCheck);
+    if(!task)return;
+    task.done=checkbox.checked;
+    p.updatedAt=new Date().toISOString();
+    saveData();
+    renderDetail();
+    toast(task.done?"Task completed.":"Task marked as open.");
+  });
+
+  $("#taskList").addEventListener("click",event=>{
+    const button=event.target.closest("[data-delete-task]");
+    if(!button)return;
+    const p=currentProject();
+    if(!p)return;
+    if(!confirm("Remove this task from the project?"))return;
+    p.tasks=p.tasks.filter(t=>t.id!==button.dataset.deleteTask);
+    p.updatedAt=new Date().toISOString();
+    saveData();
+    renderDetail();
+    toast("Task removed.");
+  });
+
+  $("#milestoneList").addEventListener("change",event=>{
+    const checkbox=event.target.closest("[data-milestone-check]");
+    if(!checkbox)return;
+    const p=currentProject();
+    if(!p)return;
+    const milestone=p.milestones.find(m=>m.id===checkbox.dataset.milestoneCheck);
+    if(!milestone)return;
+    milestone.done=checkbox.checked;
+    p.updatedAt=new Date().toISOString();
+    saveData();
+    renderDetail();
+    toast("Milestone updated.");
+  });
+
+  $("#milestoneList").addEventListener("click",event=>{
+    const button=event.target.closest("[data-delete-milestone]");
+    if(!button)return;
+    deleteItem("milestones",button.dataset.deleteMilestone);
+  });
+
+  $("#riskList").addEventListener("click",event=>{
+    const button=event.target.closest("[data-delete-risk]");
+    if(!button)return;
+    const p=projects.find(x=>x.id===$("#strategyProject").value);
+    if(!p)return;
+    if(!confirm("Remove this risk?"))return;
+    p.risks=p.risks.filter(r=>r.id!==button.dataset.deleteRisk);
+    p.updatedAt=new Date().toISOString();
+    saveData();
+    renderStrategy();
+    toast("Risk removed.");
+  });
+
+  document.addEventListener("click",event=>{
+    const goto=event.target.closest("[data-goto]");
+    if(goto){setView(goto.dataset.goto);return;}
+
+    const nav=event.target.closest("[data-view]");
+    if(nav){setView(nav.dataset.view);return;}
+
+    const open=event.target.closest("[data-open]");
+    if(open){openProject(open.dataset.open);return;}
+
+    const exportProjectButton=event.target.closest("[data-export-project]");
+    if(exportProjectButton){exportSingleProject(exportProjectButton.dataset.exportProject);return;}
+  });
+}
+
+function boot(){
+  loadData();
+  bindEvents();
+  updateDashboard();
+  updateAnalytics();
+  updateStrategyOptions();
+  renderProjectList();
+
+  if(currentProjectId&&projects.some(p=>p.id===currentProjectId)){
+    renderDetail();
+  }else if(projects.length){
+    currentProjectId=projects[0].id;
+    localStorage.setItem(CURRENT_KEY,currentProjectId);
+    renderDetail();
+  }
+
+  setView("dashboard");
+}
+
+boot();
+</script>
+</body>
+</html>
